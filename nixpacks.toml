@@ -1,0 +1,16 @@
+[phases.build]
+  nixPkgs = ['nodejs-18_x', 'npm']
+  cmds = ['npm ci --include-optional']
+  
+[nixpacks.providers]
+  Nixpacks = {}
+  
+[phases.install]
+  cmds = ['npm ci']
+  
+[staticAssets]
+  isStaticAsset = '''
+  (path includes "dist" || path includes "build") && 
+  !path.match(".*\\.(map|ts|tsx|js|jsx)$")
+  '''
+
