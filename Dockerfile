@@ -1,5 +1,8 @@
 FROM node:20-slim
 
+RUN apt-get update && apt-get install -y git --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 COPY package*.json ./
@@ -22,6 +25,13 @@ ENV API_KEY=$API_KEY
 ENV VITE_STRIPE_PUBLIC_KEY=$VITE_STRIPE_PUBLIC_KEY
 
 RUN npm run build
+
+# Clone UltimoHub if Railway didn't recursively clone the submodule
+RUN if [ ! -f ultimohub/package.json ]; then \
+      git clone --depth 1 https://github.com/GVB021/ultimohub.git ultimohub_tmp \
+      && cp -a ultimohub_tmp/. ultimohub/ \
+      && rm -rf ultimohub_tmp; \
+    fi
 
 # Build UltimoHub client
 RUN cd ultimohub && npm ci --prefer-offline --no-audit --no-fund && npx vite build
