@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/web-manifest",
+  "name": "Escola Dublagem - StudioVoice Pro",
+  "short_name": "Dublagem",
+  "description": "A melhor escola de dublagem do Brasil",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#0a0a0a",
+  "background_color": "#050505",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "orientation": "portrait-primary",
+  "categories": ["education"]
+}
