@@ -1,14 +1,1 @@
-# Task: Add Minicursos and Ultimohub buttons to main page header
-
-## Steps
-- [x] 1. Update StudentDashboard to accept initialTab prop and set activeTab accordingly
-- [x] 2. Edit src/App.tsx: Add buttons in header nav:
-  | Button | Action |
-  |--------|--------|
-  | Minicursos | Open login if needed, then StudentDashboard with initialTab='minicursos' |
-  | Estúdio | External link to ../ultimohub/client/index.html (new tab) |
-- [ ] 3. Test navigation flows
-- [ ] 4. Mark complete and attempt_completion
-
-Current step: 3/4
-
+# Railway Deployment Fix - Node 20 + Lockfile Issue\nStatus: ✅ FIXED Locally - Ready to Deploy\n\n## Steps:\n\n### 1. Update nixpacks.toml ✅ nodejs-20_x\n### 2. Update package.unified.json ✅ Node20 + safe prebuild + simplified build  \n### 3. Update railway.unified.json ✅ NODE_VERSION=20\n### 4. Local Test ✅ npm run build succeeds (vite builds dist/)\n### 5. Deploy [TODO]\n- Run: `npm run push` (or manual git commit/push)\n### 6. Verify [TODO]\n- Railway build logs\n- Production URL\n\n**Run:** `npm run push` to deploy to Railway!
