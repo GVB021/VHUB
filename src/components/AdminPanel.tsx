@@ -12,7 +12,7 @@ import {
 } from 'lucide-react';
 
 import { Button } from './ui/button';
-import { databaseService } from '../services/databaseService';
+import { databaseService } from '../services/databaseService.unified';
 import { AdminMinicursosTab } from './Minicursos/AdminMinicursosTab';
 
 export function AdminPanel({ data, onSave, onClose }: any) {
@@ -51,18 +51,29 @@ if (profile?.role === 'owner' || adminEmails.includes(user.email) || isHardcoded
     setIsLoading(true);
     try {
         const students = [];
-        const enrollments = [];
-        const activity = [];
-        const siteData = await databaseService.getSiteData();
-
-        setDraft((prev: any) => ({
-        ...prev,
-        ...siteData,
-          students: [],
-          ...s,
-          name: s.full_name || s.name || 'Sem Nome',
-          avatar: s.avatar_url || s.avatar || `https://i.pravatar.cc/150?u=${s.id}`
-        })) || [],
+          const siteData = await databaseService.getSiteData();
+          const studentsData = await databaseService.getAllStudents();
+          const enrollmentsData = await databaseService.getAllEnrollments();
+          const activityData = await databaseService.getAllActivity();
+        
+        setDraft({
+          ...draft,
+          ...siteData,
+          students: studentsData.map((s: any) => ({
+            ...s,
+            name: s.full_name || s.name || 'Sem Nome',
+            avatar: s.avatar_url || s.avatar || `https://i.pravatar.cc/150?u=${s.id}`
+          })) || [],
+          enrollments: enrollmentsData || [],
+          recentActivity: activityData?.map((a: any) => ({
+            id: a.id,
+            user: a.student_id,
+            action: a.activity_type,
+            target: a.description,
+            time: new Date(a.created_at?.seconds * 1000 || a.created_at).toLocaleString(),
+            avatar: "https://i.pravatar.cc/150?u=" + a.student_id
+          })) || []
+        });
         enrollments: enrollments || [],
         recentActivity: activity?.map((a: any) => ({
           id: a.id,
