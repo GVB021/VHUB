@@ -1,17 +1,47 @@
-# Railway npm ci Loop Fix - FINAL
+# Railway npm ci Loop Fix - COMPLETED ✅
 
-**Root cause:** postinstall script in package.json triggers recursive npm install in subdirs (ultimohub, voz-&-carreira---portal-de-dublagem). During Railway's npm ci (production), it loops infinitely, spawning new processes every ~1s, hitting timeout.
+## Problem
+- `npm ci` running in infinite loop during Railway deployment
+- Build timeout with exit code 249
+- EBUSY errors when removing `/app/node_modules/.cache`
+- `postinstall` script recursively running `npm install` in subdirectories
 
-**Fixes applied:**
-- **nixpacks.toml**: Removed duplicate npm ci from build phase.
-- **package.json** (both main and .unified): 
-  - Disabled postinstall completely: `echo 'Postinstall disabled to prevent Railway deploy loop'`
-  - Updated build: Calls explicit `build:subprojects` (npm ci + npm run build in subdirs, production-only).
-- Subdirs (ultimohub, voz-portal): No recursive postinstall triggers.
+## Root Causes Identified
+1. **Duplicate npm ci calls**: nixpacks.toml had `npm ci` in both [phases.install] and [phases.build]
+2. **Recursive postinstall**: package.json postinstall ran `npm install` in ultimohub/ and voz-&-carreira/ subdirectories
+3. **Railway restart loop**: railway.unified.json had `restartPolicyType: ON_FAILURE` causing infinite retries
+4. **Subproject build conflicts**: build:subprojects ran `npm run build` which could trigger more npm operations
 
-**Local test:** Full clean build succeeds in ~45s, no loops.
+## Fixes Applied
 
-**Next deploy:** Push changes to trigger Railway redeploy. The loop should be gone; Nixpacks npm ci runs once, no postinstall recursion, build runs subprojects explicitly.
+### 1. nixpacks.toml
+- Removed `cmds = ['npm ci --include-optional']` from [phases.build]
+- Kept `npm ci` only in [phases.install] to avoid duplicate execution
 
-Railway deploy fixed.
+### 2. package.json
+- Changed `postinstall` to echo message (disabled recursive npm install)
+- Changed `build:subprojects` from `npm run build` to `npm ci --prefer-offline --no-audit --omit=dev`
+- Added flags to speed up install and avoid cache conflicts
 
+### 3. railway.unified.json
+- Changed `restartPolicyType` from `ON_FAILURE` to `NEVER`
+- Changed `restartPolicyMaxRetries` from `10` to `0`
+- Prevents Railway from restarting failed builds (stops infinite loop)
+
+## Deployment Instructions
+```bash
+# Commit changes
+git add package.json railway.unified.json nixpacks.toml TODO.md
+git commit -m "fix: resolve Railway npm ci loop and timeout issues"
+git push origin main
+
+# Deploy to Railway
+railway up
+```
+
+## Verification
+- [x] All configuration files updated
+- [x] No duplicate npm ci calls
+- [x] No recursive postinstall
+- [x] Railway restart policy disabled
+- [ ] Deploy and monitor logs for successful build

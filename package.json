@@ -12,7 +12,7 @@
     "build:main": "vite build",
     "build:voz-carreira": "cd \"voz-&-carreira---portal-de-dublagem\" && vite build",
     "build:ultimohub": "cd ultimohub && npm run build",
-"build:subprojects":"cd ultimohub && npm run build && cd ../\"voz-&-carreira---portal-de-dublagem\" && npm run build",
+    "build:subprojects": "cd ultimohub && npm ci --prefer-offline --no-audit --omit=dev && cd ../\"voz-&-carreira---portal-de-dublagem\" && npm ci --prefer-offline --no-audit --omit=dev",
     "start": "node server.unified.js",
     "clean": "rm -rf dist \"voz-&-carreira---portal-de-dublagem\"/dist ultimohub/dist",
     "lint": "tsc --noEmit",
