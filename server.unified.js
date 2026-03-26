@@ -6,6 +6,9 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import compression from 'compression';
+import rateLimit from 'express-rate-limit';
 import { createClient } from '@supabase/supabase-js';
 
 // Load environment variables
@@ -87,9 +90,30 @@ const supabaseKey = process.env.VITE_SUPABASE_ANON_KEY;
 const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 // Middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      scriptSrc: ["'self'", "'unsafe-inline'"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https://*.supabase.co", "wss://*.supabase.co"],
+    },
+  },
+}));
+app.use(compression());
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: { error: 'Too many requests, please try again later.' }
+});
+app.use('/api/', limiter);
 
 // Serve static files from the main application
 app.use(express.static(path.join(__dirname, 'dist')));
@@ -114,16 +138,26 @@ app.use('/api', (req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ 
-    status: 'ok', 
+  const healthcheck = {
+    status: 'ok',
     environment: NODE_ENV,
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime(),
+    version: process.env.npm_package_version || '1.0.0',
     services: {
-      main: true,
+      main: fs.existsSync(path.join(__dirname, 'dist', 'index.html')),
       vozCarreira: fs.existsSync(vozCarreiraPath),
       ultimoHub: fs.existsSync(ultimoHubClientPath),
-      database: Boolean(supabase)
+      database: Boolean(supabase),
+      websocket: wss.clients ? true : false
+    },
+    memory: {
+      used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + 'MB',
+      total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024) + 'MB'
     }
-  });
+  };
+  
+  res.status(200).json(healthcheck);
 });
 
 // API endpoint for creating Daily.co rooms
