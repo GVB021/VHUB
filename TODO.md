@@ -1,1 +1,12 @@
-# Railway Deployment Fix - Node 20 + Lockfile Issue\nStatus: ✅ FIXED Locally - Ready to Deploy\n\n## Steps:\n\n### 1. Update nixpacks.toml ✅ nodejs-20_x\n### 2. Update package.unified.json ✅ Node20 + safe prebuild + simplified build  \n### 3. Update railway.unified.json ✅ NODE_VERSION=20\n### 4. Local Test ✅ npm run build succeeds (vite builds dist/)\n### 5. Deploy [TODO]\n- Run: `npm run push` (or manual git commit/push)\n### 6. Verify [TODO]\n- Railway build logs\n- Production URL\n\n**Run:** `npm run push` to deploy to Railway!
+# Railway Deployment Fix - Node 20 + Prod Build Alignment
+
+Status: 🔄 In Progress - Step 1 Complete
+
+## Steps:
+- [x] **Plan approved** by user
+- [x] **1. Edit package.json**: engines Node20, prebuild npm ci --omit=dev, simplified build (main only), start server.unified.js
+- [ ] **2. Local test**: Clean install + npm run build to verify vite completes
+- [ ] **3. Deploy**: npm run push / git push for Railway
+- [ ] **4. Verify**: Railway logs + prod healthcheck
+
+**Next**: Test local build.
