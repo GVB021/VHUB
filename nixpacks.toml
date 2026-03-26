@@ -9,8 +9,6 @@ cacheDirectories = ['node_modules', '.npm']
 cmds = ['npm run build']
 cacheDirectories = ['dist', 'voz-&-carreira---portal-de-dublagem/dist']
 
-[phases.start]
-cmds = ['node server.unified.js']
 
 [variables]
 NODE_ENV = 'production'
