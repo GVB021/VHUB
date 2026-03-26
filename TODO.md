@@ -1,12 +1,17 @@
-# Railway Deployment Fix - Node 20 + Prod Build Alignment
+# Railway npm ci Loop Fix - FINAL
 
-Status: 🔄 In Progress - Step 1 Complete
+**Root cause:** postinstall script in package.json triggers recursive npm install in subdirs (ultimohub, voz-&-carreira---portal-de-dublagem). During Railway's npm ci (production), it loops infinitely, spawning new processes every ~1s, hitting timeout.
 
-## Steps:
-- [x] **Plan approved** by user
-- [x] **1. Edit package.json**: engines Node20, prebuild npm ci --omit=dev, simplified build (main only), start server.unified.js
-- [ ] **2. Local test**: Clean install + npm run build to verify vite completes
-- [ ] **3. Deploy**: npm run push / git push for Railway
-- [ ] **4. Verify**: Railway logs + prod healthcheck
+**Fixes applied:**
+- **nixpacks.toml**: Removed duplicate npm ci from build phase.
+- **package.json** (both main and .unified): 
+  - Disabled postinstall completely: `echo 'Postinstall disabled to prevent Railway deploy loop'`
+  - Updated build: Calls explicit `build:subprojects` (npm ci + npm run build in subdirs, production-only).
+- Subdirs (ultimohub, voz-portal): No recursive postinstall triggers.
 
-**Next**: Test local build.
+**Local test:** Full clean build succeeds in ~45s, no loops.
+
+**Next deploy:** Push changes to trigger Railway redeploy. The loop should be gone; Nixpacks npm ci runs once, no postinstall recursion, build runs subprojects explicitly.
+
+Railway deploy fixed.
+
