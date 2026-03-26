@@ -6,8 +6,23 @@ COPY package*.json ./
 RUN npm ci --prefer-offline --no-audit --no-fund
 
 COPY . .
+
+# Vite build-time env vars (Railway passes these as Docker build args)
+ARG VITE_SUPABASE_URL
+ARG VITE_SUPABASE_ANON_KEY
+ARG GEMINI_API_KEY
+ARG API_KEY
+ARG VITE_STRIPE_PUBLIC_KEY
+
+ENV VITE_SUPABASE_URL=$VITE_SUPABASE_URL
+ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
+ENV GEMINI_API_KEY=$GEMINI_API_KEY
+ENV API_KEY=$API_KEY
+ENV VITE_STRIPE_PUBLIC_KEY=$VITE_STRIPE_PUBLIC_KEY
+
 RUN npm run build
 
+ENV NODE_ENV=production
 EXPOSE 3000
 
 CMD ["node", "server.unified.js"]
