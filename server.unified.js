@@ -91,16 +91,7 @@ const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabase
 
 // Middleware
 app.use(helmet({
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-      scriptSrc: ["'self'", "'unsafe-inline'"],
-      fontSrc: ["'self'", "https://fonts.gstatic.com"],
-      imgSrc: ["'self'", "data:", "https:"],
-      connectSrc: ["'self'", "https://*.supabase.co", "wss://*.supabase.co"],
-    },
-  },
+  contentSecurityPolicy: false,
 }));
 app.use(compression());
 app.use(cors());
@@ -270,11 +261,6 @@ app.get('/api/takes/:takeId/stream', async (req, res) => {
   }
 });
 
-// Fallback route for the main application SPA
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
-
 // Fallback route for the voz-carreira SPA
 app.get('/voz-carreira/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'voz-&-carreira---portal-de-dublagem', 'dist', 'index.html'));
@@ -283,6 +269,11 @@ app.get('/voz-carreira/*', (req, res) => {
 // Fallback route for the ultimohub SPA
 app.get('/ultimohub/*', (req, res) => {
   res.sendFile(path.join(__dirname, 'ultimohub', 'client', 'dist', 'index.html'));
+});
+
+// Fallback route for the main application SPA (catch-all - must be last)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 // Start the server
