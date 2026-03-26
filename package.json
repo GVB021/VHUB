@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "prebuild": "rm -rf node_modules package-lock.json && npm install",
+"prebuild":"rm -rf package-lock.json node_modules/.cache node_modules/.vite && npm install || true"
     "dev": "concurrently \"npm run dev:main\" \"npm run dev:voz-carreira\" \"npm run dev:ultimohub\"",
     "dev:main": "vite --port=3000 --host=0.0.0.0",
     "dev:voz-carreira": "cd voz-&-carreira---portal-de-dublagem && vite --port=3001 --host=0.0.0.0",
