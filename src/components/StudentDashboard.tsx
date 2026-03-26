@@ -19,9 +19,15 @@ import { MinicursosTab } from './Minicursos/MinicursosTab';
 // TODO: Configure Stripe Public Key when ready
 // const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_placeholder');
 
-export function StudentDashboard({ onLogout, onHome, data, studentData }: any) {
-  const [activeTab, setActiveTab] = useState('dashboard');
+export function StudentDashboard({ onLogout, onHome, data, studentData, initialTab }: any) {
+  const [activeTab, setActiveTab] = useState(initialTab || 'dashboard');
   const [isCelebrating, setIsCelebrating] = useState(false);
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
 
   const profile = studentData?.profile;
   const enrollments = studentData?.enrollments || [];

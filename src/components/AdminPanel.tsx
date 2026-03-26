@@ -74,16 +74,6 @@ if (profile?.role === 'owner' || adminEmails.includes(user.email) || isHardcoded
             avatar: "https://i.pravatar.cc/150?u=" + a.student_id
           })) || []
         });
-        enrollments: enrollments || [],
-        recentActivity: activity?.map((a: any) => ({
-          id: a.id,
-          user: a.student_id,
-          action: a.activity_type,
-          target: a.description,
-          time: new Date(a.created_at?.seconds * 1000 || a.created_at).toLocaleString(),
-          avatar: "https://i.pravatar.cc/150?u=" + a.student_id
-        })) || []
-      }));
     } catch (error) {
       console.error('Failed to load admin data:', error);
       toast.error('Erro ao carregar dados do painel.');

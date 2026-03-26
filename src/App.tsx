@@ -147,10 +147,16 @@ function App() {
     setCurrentUser(user);
     setIsLoginOpen(false);
     setIsLoading(true);
-    // Use optional chaining to safely access uid property
     await loadStudentData(user?.uid || user?.id);
     setIsLoading(false);
-    setIsStudentDashboardOpen(true);
+    
+    // Check for minicursos direct navigation
+    if ((window as any).minicursosTab === 'minicursos') {
+      (window as any).minicursosTab = undefined;
+      setIsStudentDashboardOpen(true);
+    } else {
+      setIsStudentDashboardOpen(true);
+    }
   };
 
   const handleLogout = async () => {
@@ -221,6 +227,7 @@ function App() {
         onHome={() => setIsStudentDashboardOpen(false)} 
         data={siteData} 
         studentData={studentData}
+        initialTab={(window as any).minicursosTab}
       />
     );
   }
@@ -252,15 +259,30 @@ function App() {
             <a href="#professores" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Professores</a>
             <a href="#depoimentos" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">Depoimentos</a>
             <a href="#faq" className="text-sm font-medium text-gray-300 hover:text-white transition-colors">FAQ</a>
+            <button 
+              onClick={() => {
+                if (currentUser) {
+                  setIsStudentDashboardOpen(true);
+                } else {
+                  (window as any).minicursosTab = 'minicursos';
+                  setIsLoginOpen(true);
+                }
+              }}
+              className="text-sm font-medium text-gray-300 hover:text-white transition-colors hover:neon-text-blue"
+            >
+              Minicursos
+            </button>
           </nav>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <button 
-              onClick={() => setIsLoginOpen(true)}
+            <a 
+              href="../ultimohub/client/index.html" 
+              target="_blank" 
+              rel="noopener noreferrer"
               className="text-xs md:text-sm font-bold text-white hover:text-blue-400 transition-colors hidden xs:block hover:neon-text-blue"
             >
-              Portal do Aluno
-            </button>
+              Estúdio
+            </a>
             <Button onClick={() => handleEnroll()} className="bg-white text-black hover:bg-gray-200 rounded-full px-4 md:px-6 py-2 h-auto text-xs md:text-sm font-bold whimsy-hover shadow-[0_0_20px_rgba(255,255,255,0.1)] neon-glow-white">
               Matricule-se
             </Button>

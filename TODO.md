@@ -1,13 +1,14 @@
-# Fix Railway Rollup Build Error - TODO
+# Task: Add Minicursos and Ultimohub buttons to main page header
 
-## Plan Breakdown (Approved)
-1. [✅] Update package.json: Add prebuild script (rm node_modules/package-lock + npm install full), update build script with clean/prebuild.
-2. [✅] Update package.unified.json: Align scripts with package.json changes.
-3. [✅] Update railway.unified.json: Modify buildCommand to use prebuild.
-4. [✅] Create nixpacks.toml: Explicit Node/Railway build config.
-5. [✅] Test local: Run npm run build, verify success.
-6. [✅] Commit/push/deploy: railway up, check logs.
-7. [✅] Mark complete: attempt_completion.
+## Steps
+- [x] 1. Update StudentDashboard to accept initialTab prop and set activeTab accordingly
+- [x] 2. Edit src/App.tsx: Add buttons in header nav:
+  | Button | Action |
+  |--------|--------|
+  | Minicursos | Open login if needed, then StudentDashboard with initialTab='minicursos' |
+  | Estúdio | External link to ../ultimohub/client/index.html (new tab) |
+- [ ] 3. Test navigation flows
+- [ ] 4. Mark complete and attempt_completion
 
-Progress will be updated after each step.
+Current step: 3/4
 
