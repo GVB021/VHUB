@@ -22,7 +22,6 @@ const getEnv = (key: string): string => {
 export const isProduction = getEnv('MODE') === 'production';
 
 export const requiredEnvVars = [
-  'VITE_STRIPE_PUBLIC_KEY',
   'VITE_SUPABASE_URL', 
   'VITE_SUPABASE_ANON_KEY'
 ] as const;
