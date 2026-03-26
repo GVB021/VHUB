@@ -1,7 +1,0 @@
-$schema = 'https://railway.app/railway.schema.json'
-
-[build]
-builder = "NIXPACKS"
-buildCommand = "npm ci --omit=dev && npm run build"
-nodeVersion = "22.12.0"
-

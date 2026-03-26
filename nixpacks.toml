@@ -1,6 +1,0 @@
-[phases.build]
-dependsOn = ["install"]
-cmds = ["npm ci --prefer-offline --no-audit --progress=false --omit=dev && npm run build"]
-[nixpacks.providers.nodejs]
-version = "22.12.0"
-
