@@ -23,6 +23,9 @@ ENV VITE_STRIPE_PUBLIC_KEY=$VITE_STRIPE_PUBLIC_KEY
 
 RUN npm run build
 
+# Build UltimoHub client
+RUN cd ultimohub && npm ci --prefer-offline --no-audit --no-fund && npx vite build
+
 ENV NODE_ENV=production
 EXPOSE 3000
 

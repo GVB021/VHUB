@@ -14,7 +14,7 @@ import {
 import { Button } from './ui/button';
 import { MinicursosTab } from './Minicursos/MinicursosTab';
 
-// import { useMinicursosStore } from '../../store/minicursosStore';
+import { useMinicursosStore } from '../store/minicursosStore';
 
 // TODO: Configure Stripe Public Key when ready
 // const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY || 'pk_test_placeholder');
@@ -42,11 +42,11 @@ export function StudentDashboard({ onLogout, onHome, data, studentData, initialT
     { id: 'suporte', label: 'Suporte', icon: HelpCircle },
   ];
 
-// const { loadCourses } = useMinicursosStore();
+  const { loadCourses } = useMinicursosStore();
 
-// useEffect(() => {
-//     loadCourses();
-//   }, [loadCourses]);
+  React.useEffect(() => {
+    loadCourses();
+  }, [loadCourses]);
 
   const handleStripePayment = async (invoiceId: string) => {
     setIsCelebrating(true);

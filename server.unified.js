@@ -116,7 +116,7 @@ if (fs.existsSync(vozCarreiraPath)) {
 }
 
 // Serve UltimoHub static files if available
-const ultimoHubClientPath = path.join(__dirname, 'ultimohub', 'client', 'dist');
+const ultimoHubClientPath = path.join(__dirname, 'ultimohub', 'dist', 'public');
 if (fs.existsSync(ultimoHubClientPath)) {
   app.use('/ultimohub', express.static(ultimoHubClientPath));
 }
@@ -268,7 +268,7 @@ app.get('/voz-carreira/*', (req, res) => {
 
 // Fallback route for the ultimohub SPA
 app.get('/ultimohub/*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'ultimohub', 'client', 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'ultimohub', 'dist', 'public', 'index.html'));
 });
 
 // Fallback route for the main application SPA (catch-all - must be last)

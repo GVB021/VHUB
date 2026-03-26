@@ -276,9 +276,7 @@ function App() {
 
           <div className="flex items-center gap-2 md:gap-4">
             <a 
-              href="../ultimohub/client/index.html" 
-              target="_blank" 
-              rel="noopener noreferrer"
+              href="/ultimohub" 
               className="text-xs md:text-sm font-bold text-white hover:text-blue-400 transition-colors hidden xs:block hover:neon-text-blue"
             >
               Estúdio
